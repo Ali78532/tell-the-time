@@ -3,181 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>اختبار</title>
+    <title>الإخبار عن الوقت</title>
     <style>
         body {
-            font-family: 'Helvetica Neue', sans-serif;
-            margin: 20px;
+            font-family: "Arial", sans-serif;
             background-color: #121212;
-            color: #e0e0e0;
+            color: #ffffff;
+            text-align: center;
+            margin: 20px;
+            direction: rtl;
         }
         h1 {
-            text-align: center;
+            color: #4CAF50;
             margin-bottom: 20px;
-            color: #90caf9;
-            font-size: 30px;
-            direction: rtl;
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
-        }
-        .question-container {
-            margin-bottom: 25px;
-            padding: 25px;
-            border-radius: 15px;
-            background-color: #1e1e1e;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
         }
         .question {
-            color: #64b5f6;
-            font-size: 20px;
+            font-size: 32px;
             font-weight: bold;
-            margin-bottom: 15px;
-            line-height: 1.5;
+            margin: 30px 0;
+            color: #ffffff;
         }
-        .option {
-            cursor: pointer;
-            padding: 12px 18px;
-            border: 2px solid #37474f;
-            border-radius: 10px;
-            margin: 10px 0;
-            background-color: #263238;
-            color: #e0e0e0;
+        .words, .answer {
+            margin: 20px auto;
+            max-width: 600px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .word {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
             font-size: 18px;
+            background-color: #424242;
+            border: 1px solid #616161;
+            border-radius: 5px;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            color: #fff;
+        }
+        .word:hover {
+            background-color: #616161;
+            transform: scale(1.1);
+        }
+        .answer {
+            min-height: 50px;
+            border: 2px dashed #616161;
+            padding: 10px;
+            background-color: #1f1f1f;
+            border-radius: 5px;
+            justify-content: flex-start;
             text-align: left;
-            display: block;
-            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
         }
-        .option:hover {
-            background-color: #546e7a;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-        }
-        .option.correct {
-            background-color: #388e3c;
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
             color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
         }
-        .option.wrong {
-            background-color: #d32f2f;
-            color: white;
-        }
-        .option.selected {
-            transform: scale(1.05);
+        button:hover {
+            background-color: #45a049;
         }
         .result {
+            margin-top: 20px;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        .result.correct {
+            color: #90ff90; /* أخضر فاتح */
+        }
+        .result.incorrect {
+            color: #ff9999; /* أحمر فاتح */
+        }
+        .hidden {
+            display: none;
+        }
+        #score {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             font-size: 28px;
-            margin-top: 30px;
             font-weight: bold;
-            color: gold;
-            text-align: center;
-            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
-            display: none;
+            color: #ffffff;
+            padding: 10px;
+            border-radius: 5px;
+            display: none; /* إخفاء الدرجة بشكل افتراضي */
         }
-        .footer {
-            text-align: center;
-            margin-top: 50px;
+
+        #check-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
             font-size: 18px;
-            color: #ccc;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            color: white;
         }
-        .hint {
-            color: yellow;
-            font-size: 16px;
-            margin-top: 10px;
-            display: none;
-            text-align: right;
-            direction: rtl;
+
+        #check-btn:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <h1>الاخبار عن الوقت</h1>
-    <div id="quiz-container">
-        <div class="quiz">
-            <div class="question-container">
-                <p class="question">1- 9:10 (tell the time)</p>
-                <div class="option" data-correct="false">It's five ten</div>
-                <div class="option" data-correct="false">It's ten nine</div>
-                <div class="option" data-correct="true">It's nine ten</div>
-            </div>
-            <div class="question-container">
-                <p class="question">2- 16:20 (tell the time)</p>
-                <div class="option" data-correct="false">It's six two</div>
-				<div class="option" data-correct="false">four twenty</div>
-                <div class="option" data-correct="true">It's four twenty</div>
-            </div>
-            <div class="question-container">
-                <p class="question">3- 5:40 (tell the time)</p>
-                <div class="option" data-correct="true">It's five forty</div>
-				<div class="option" data-correct="false">It's five four</div>
-                <div class="option" data-correct="false">It's five forteen</div>
-            </div>
-			<div class="question-container">
-                <p class="question">4- 17:00 (tell the time)</p>
-                <div class="option" data-correct="false">It's seven two</div>
-				<div class="option" data-correct="true">It's five o'clock</div>
-                <div class="option" data-correct="false">It's five five</div>
-            </div>
-			<div class="question-container">
-                <p class="question">5- 20:30 (tell the time)</p>
-                <div class="option" data-correct="false">It's twenty three</div>
-                <div class="option" data-correct="false">It's twenty thirty</div>
-				<div class="option" data-correct="true">It's eight thirty</div>
-            </div>
-			</div>
-
-        <div class="result">درجتك: <span id="score">0</span></div>
-    </div>
-
-    <div class="footer">إعداد الأستاذ: علي حسين</div>
+    <h1>الإخبار عن الوقت</h1>
+    <div class="question" id="time"></div>
+    <div class="answer" id="answer" style="direction: ltr;"></div>
+    <div class="words" id="words"></div>
+    <div class="result" id="result"></div>
+    <button id="check-btn" onclick="checkAnswer()">تحقق من الإجابة</button>
+    <button id="next-btn" class="hidden" onclick="displayQuestion()">التالي</button>
+    <div id="score"></div>
 
     <script>
-        const options = document.querySelectorAll('.option');
-        const resultSpan = document.getElementById('score');
-        const resultDiv = document.querySelector('.result');
+        const times = [
+            { hour: 1, minute: 10, correct: "It's one ten", words: ["It's", "one", "ten", "five", "four", "three"] },
+            { hour: 14, minute: 20, correct: "It's two twenty", words: ["It's", "two", "twenty", "ten", "one", "four"] },
+            { hour: 15, minute: 0, correct: "It's three o'clock", words: ["It's", "three", "o'clock", "ten", "fifteen", "five"] },
+            { hour: 20, minute: 30, correct: "It's eight thirty", words: ["It's", "eight", "thirty", "seven", "three", "twenty"] },
+            { hour: 9, minute: 5, correct: "It's nine five", words: ["It's", "nine", "five", "ten", "seven", "two"] }
+        ];
+
+        let currentQuestion = -1;
+        let selectedWords = [];
+        let usedQuestions = new Set();
         let score = 0;
-        let answeredQuestions = 0;
 
-        const correctSound = new Audio('Sounds/Correct.wav');
-        const wrongSound = new Audio('Sounds/Wrong.wav');
+        function getNextQuestion() {
+            if (usedQuestions.size === times.length) {
+                document.getElementById("result").textContent = "لقد انتهيت من جميع الأسئلة!";
+                document.getElementById("result").className = "result correct";
+                document.getElementById("words").innerHTML = "";
+                document.getElementById("answer").innerHTML = "";
+                document.getElementById("time").textContent = "";
+                document.getElementById("check-btn").classList.add("hidden");
+                document.getElementById("next-btn").classList.add("hidden");
 
-        options.forEach(option => {
-            option.addEventListener('click', () => {
-                const question = option.parentElement;
-                const alreadyAnswered = question.querySelector('.option.correct') || question.querySelector('.option.wrong');
-                const hint = question.querySelector('.hint');
+                document.getElementById("score").textContent = `درجتك ${score}`;
+                document.getElementById("score").style.display = "block";
+                return null;
+            }
 
-                if (alreadyAnswered) {
-                    return;
-                }
+            do {
+                currentQuestion = Math.floor(Math.random() * times.length);
+            } while (usedQuestions.has(currentQuestion));
+            usedQuestions.add(currentQuestion);
+            return times[currentQuestion];
+        }
 
-                const isCorrect = option.getAttribute('data-correct') === "true";
-                if (isCorrect) {
-                    option.classList.add('correct');
-                    score += 2;
-                    correctSound.play();
-                } else {
-                    option.classList.add('wrong');
-                    wrongSound.play();
-                    if (hint) hint.style.display = 'block';
-                    if (navigator.vibrate) {
-                        navigator.vibrate(80);
-                    }
-                }
+        function displayQuestion() {
+            const question = getNextQuestion();
+            if (!question) return;
 
-                const siblings = question.querySelectorAll('.option');
-                siblings.forEach(sibling => {
-                    if (sibling.getAttribute('data-correct') === "true") {
-                        sibling.classList.add('correct');
-                    }
-                });
+            // عرض الساعات والدقائق برقمين
+            const formattedHour = String(question.hour).padStart(2, '0');
+            const formattedMinute = String(question.minute).padStart(2, '0');
+            document.getElementById("time").textContent = `${formattedHour}:${formattedMinute}`;
 
-                option.classList.add('selected');
-                answeredQuestions++;
+            document.getElementById("answer").textContent = "";
+            document.getElementById("words").innerHTML = "";
 
-                if (answeredQuestions === document.querySelectorAll('.question-container').length) {
-                    resultDiv.style.display = 'block';
-                }
-
-                resultSpan.textContent = score;
+            selectedWords = [];
+            shuffleArray(question.words).forEach((word, index) => {
+                const wordElement = document.createElement("span");
+                wordElement.textContent = word;
+                wordElement.className = "word";
+                wordElement.onclick = () => selectWord(wordElement, index);
+                document.getElementById("words").appendChild(wordElement);
             });
+
+            document.getElementById("result").textContent = "";
+            document.getElementById("check-btn").classList.remove("hidden");
+            document.getElementById("next-btn").classList.add("hidden");
+        }
+
+        function selectWord(wordElement, index) {
+            const word = wordElement.textContent;
+            if (selectedWords.includes(index)) {
+                selectedWords.splice(selectedWords.indexOf(index), 1);
+                wordElement.style.backgroundColor = "#424242";
+                wordElement.style.cursor = "pointer";
+            } else {
+                selectedWords.push(index);
+                wordElement.style.backgroundColor = "#5555bb";
+                wordElement.style.cursor = "not-allowed";
+            }
+            updateAnswer();
+        }
+
+        function updateAnswer() {
+            const question = times[currentQuestion];
+            const answer = selectedWords.map(i => question.words[i]).join(" ");
+            document.getElementById("answer").textContent = answer;
+        }
+
+    function checkAnswer() {
+        const question = times[currentQuestion];
+        const userAnswer = selectedWords.map(i => question.words[i]).join(" ");
+        const correctSound = new Audio("Sounds/Correct.wav");
+        const wrongSound = new Audio("Sounds/Wrong.wav");
+
+        if (userAnswer === question.correct) {
+            document.getElementById("result").textContent = "إجابتك صحيحة! احسنت.";
+            document.getElementById("result").className = "result correct";
+            score += 2;
+            correctSound.play(); // تشغيل صوت الإجابة الصحيحة
+        } else {
+            document.getElementById("result").innerHTML = `إجابتك خاطئة. الإجابة الصحيحة هي<br>${question.correct}`;
+            document.getElementById("result").className = "result incorrect";
+            wrongSound.play(); // تشغيل صوت الإجابة الخاطئة
+        }
+
+        document.getElementById("check-btn").classList.add("hidden");
+        document.getElementById("next-btn").classList.remove("hidden");
+    }
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        displayQuestion();
+    // معالج الأحداث عند النقر على حقل الإجابة
+    document.getElementById("answer").addEventListener("click", () => {
+        // تفريغ النص من الحقل
+        document.getElementById("answer").textContent = "";
+        
+        // إعادة تعيين الألوان الافتراضية لجميع الأزرار
+        const wordElements = document.querySelectorAll(".word");
+        wordElements.forEach(word => {
+            word.style.backgroundColor = "#424242";
+            word.style.cursor = "pointer";
         });
+
+        // إعادة تعيين الكلمات المختارة
+        selectedWords = [];
+    });
     </script>
 </body>
 </html>
