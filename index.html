@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', sans-serif;
+            margin: 20px;
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #90caf9;
+            font-size: 30px;
+            direction: rtl;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+        }
+        .question-container {
+            margin-bottom: 25px;
+            padding: 25px;
+            border-radius: 15px;
+            background-color: #1e1e1e;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+        }
+        .question {
+            color: #64b5f6;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+        .option {
+            cursor: pointer;
+            padding: 12px 18px;
+            border: 2px solid #37474f;
+            border-radius: 10px;
+            margin: 10px 0;
+            background-color: #263238;
+            color: #e0e0e0;
+            font-size: 18px;
+            text-align: left;
+            display: block;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+        }
+        .option:hover {
+            background-color: #546e7a;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+        .option.correct {
+            background-color: #388e3c;
+            color: white;
+        }
+        .option.wrong {
+            background-color: #d32f2f;
+            color: white;
+        }
+        .option.selected {
+            transform: scale(1.05);
+        }
+        .result {
+            font-size: 28px;
+            margin-top: 30px;
+            font-weight: bold;
+            color: gold;
+            text-align: center;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 18px;
+            color: #ccc;
+        }
+        .hint {
+            color: yellow;
+            font-size: 16px;
+            margin-top: 10px;
+            display: none;
+            text-align: right;
+            direction: rtl;
+        }
+    </style>
+</head>
+<body>
+    <h1>الاخبار عن الوقت</h1>
+    <div id="quiz-container">
+        <div class="quiz">
+            <div class="question-container">
+                <p class="question">1- 9:10 (tell the time)</p>
+                <div class="option" data-correct="false">It's five ten</div>
+                <div class="option" data-correct="false">It's ten nine</div>
+                <div class="option" data-correct="true">It's nine ten</div>
+            </div>
+            <div class="question-container">
+                <p class="question">2- 16:20 (tell the time)</p>
+                <div class="option" data-correct="false">It's six two</div>
+				<div class="option" data-correct="false">four twenty</div>
+                <div class="option" data-correct="true">It's four twenty</div>
+            </div>
+            <div class="question-container">
+                <p class="question">3- 5:40 (tell the time)</p>
+                <div class="option" data-correct="true">It's five forty</div>
+				<div class="option" data-correct="false">It's five four</div>
+                <div class="option" data-correct="false">It's five forteen</div>
+            </div>
+			<div class="question-container">
+                <p class="question">4- 17:00 (tell the time)</p>
+                <div class="option" data-correct="false">It's seven two</div>
+				<div class="option" data-correct="true">It's five o'clock</div>
+                <div class="option" data-correct="false">It's five five</div>
+            </div>
+			<div class="question-container">
+                <p class="question">5- 20:30 (tell the time)</p>
+                <div class="option" data-correct="false">It's twenty three</div>
+                <div class="option" data-correct="false">It's twenty thirty</div>
+				<div class="option" data-correct="true">It's eight thirty</div>
+            </div>
+			</div>
+
+        <div class="result">درجتك: <span id="score">0</span></div>
+    </div>
+
+    <div class="footer">إعداد الأستاذ: علي حسين</div>
+
+    <script>
+        const options = document.querySelectorAll('.option');
+        const resultSpan = document.getElementById('score');
+        const resultDiv = document.querySelector('.result');
+        let score = 0;
+        let answeredQuestions = 0;
+
+        const correctSound = new Audio('Sounds/Correct.wav');
+        const wrongSound = new Audio('Sounds/Wrong.wav');
+
+        options.forEach(option => {
+            option.addEventListener('click', () => {
+                const question = option.parentElement;
+                const alreadyAnswered = question.querySelector('.option.correct') || question.querySelector('.option.wrong');
+                const hint = question.querySelector('.hint');
+
+                if (alreadyAnswered) {
+                    return;
+                }
+
+                const isCorrect = option.getAttribute('data-correct') === "true";
+                if (isCorrect) {
+                    option.classList.add('correct');
+                    score += 2;
+                    correctSound.play();
+                } else {
+                    option.classList.add('wrong');
+                    wrongSound.play();
+                    if (hint) hint.style.display = 'block';
+                    if (navigator.vibrate) {
+                        navigator.vibrate(80);
+                    }
+                }
+
+                const siblings = question.querySelectorAll('.option');
+                siblings.forEach(sibling => {
+                    if (sibling.getAttribute('data-correct') === "true") {
+                        sibling.classList.add('correct');
+                    }
+                });
+
+                option.classList.add('selected');
+                answeredQuestions++;
+
+                if (answeredQuestions === document.querySelectorAll('.question-container').length) {
+                    resultDiv.style.display = 'block';
+                }
+
+                resultSpan.textContent = score;
+            });
+        });
+    </script>
+</body>
+</html>
