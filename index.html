@@ -115,6 +115,15 @@
         #check-btn:hover {
             background-color: #45a049;
         }
+#footer-text {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 20px;
+    color: #90caf9; /* لون أزرق فاتح */
+}
     </style>
 </head>
 <body>
@@ -126,7 +135,8 @@
     <button id="check-btn" onclick="checkAnswer()">تحقق من الإجابة</button>
     <button id="next-btn" class="hidden" onclick="displayQuestion()">التالي</button>
     <div id="score"></div>
-
+    <div id="footer-text"></div>
+    
     <script>
         const times = [
             { hour: 1, minute: 10, correct: "It's one ten", words: ["It's", "one", "ten", "five", "four", "three"] },
@@ -141,27 +151,34 @@
         let usedQuestions = new Set();
         let score = 0;
 
-        function getNextQuestion() {
-            if (usedQuestions.size === times.length) {
-                document.getElementById("result").textContent = "لقد انتهيت من جميع الأسئلة!";
-                document.getElementById("result").className = "result correct";
-                document.getElementById("words").innerHTML = "";
-                document.getElementById("answer").innerHTML = "";
-                document.getElementById("time").textContent = "";
-                document.getElementById("check-btn").classList.add("hidden");
-                document.getElementById("next-btn").classList.add("hidden");
+function getNextQuestion() {
+    if (usedQuestions.size === times.length) {
+        document.getElementById("result").textContent = "لقد انتهيت من جميع الأسئلة!";
+        document.getElementById("result").className = "result correct";
+        document.getElementById("words").innerHTML = "";
+        document.getElementById("answer").innerHTML = "";
+        document.getElementById("time").textContent = "";
+        document.getElementById("check-btn").classList.add("hidden");
+        document.getElementById("next-btn").classList.add("hidden");
 
-                document.getElementById("score").textContent = `درجتك ${score}`;
-                document.getElementById("score").style.display = "block";
-                return null;
-            }
+        document.getElementById("score").textContent = `درجتك ${score}`;
+        document.getElementById("score").style.display = "block";
 
-            do {
-                currentQuestion = Math.floor(Math.random() * times.length);
-            } while (usedQuestions.has(currentQuestion));
-            usedQuestions.add(currentQuestion);
-            return times[currentQuestion];
-        }
+        // إخفاء حقل الإجابة
+        document.getElementById("answer").style.display = "none";
+
+        // عرض العبارة في أسفل الشاشة
+        document.getElementById("footer-text").textContent = "إعداد الأستاذ: علي حسين";
+
+        return null;
+    }
+
+    do {
+        currentQuestion = Math.floor(Math.random() * times.length);
+    } while (usedQuestions.has(currentQuestion));
+    usedQuestions.add(currentQuestion);
+    return times[currentQuestion];
+}
 
         function displayQuestion() {
             const question = getNextQuestion();
@@ -254,5 +271,6 @@
         selectedWords = [];
     });
     </script>
+
 </body>
 </html>
